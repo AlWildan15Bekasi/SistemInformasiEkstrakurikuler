@@ -50,7 +50,7 @@
             Pendaftaran
           </button>
           <button 
-            onclick="alert('Fitur Dashboard Login akan dibuat di tahap selanjutnya! (Sesuai permintaan)')" 
+            onclick="window.open('https://alwildan15bekasi.github.io/DashboardLogIn/', '_blank')" 
             class="border-2 border-amber-400 text-amber-400 px-3 xl:px-4 py-2 rounded-md font-semibold hover:bg-amber-400 hover:text-blue-900 transition flex items-center gap-2 shadow-md text-sm xl:text-base"
           >
             <i data-lucide="lock" class="w-4 h-4"></i> Login
@@ -72,7 +72,7 @@
       <a href="#ekskul" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="block px-3 py-2 rounded-md hover:bg-white/10 text-white">Ekstrakurikuler</a>
       <a href="#dokumentasi" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="block px-3 py-2 rounded-md hover:bg-white/10 text-white">Dokumentasi</a>
       <button onclick="navigateTo('register')" class="block w-full text-left bg-amber-400 text-blue-900 px-3 py-2 rounded-md font-semibold mt-4 shadow-md">Pendaftaran</button>
-      <button onclick="alert('Fitur Login coming soon!')" class="block w-full text-left border border-amber-400 text-amber-400 px-3 py-2 rounded-md font-semibold mt-2 shadow-md">Login Siswa</button>
+      <button onclick="window.open('https://alwildan15bekasi.github.io/DashboardLogIn/', '_blank')" class="block w-full text-left border border-amber-400 text-amber-400 px-3 py-2 rounded-md font-semibold mt-2 shadow-md">Login Siswa</button>
     </div>
   </nav>
 
@@ -121,6 +121,7 @@
   <div id="view-home" class="flex-grow">
     <!-- Hero Section -->
     <section class="relative bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 text-white pt-24 pb-32 overflow-hidden">
+      <!-- Ornamen Kontur Lancip & Garis (Background) -->
       <div class="absolute inset-0 z-0">
         <div class="absolute top-0 right-0 w-1/2 h-full bg-blue-700 opacity-40 transform skew-x-[-20deg] translate-x-20"></div>
         <div class="absolute -top-10 left-10 w-40 h-40 border-2 border-amber-400 opacity-20 transform rotate-45"></div>
@@ -340,7 +341,7 @@
     // URL untuk Mengambil Data (Siswa, Ekskul & Pembina) - Spreadsheet 1
     const GAS_URL_GET = "https://script.google.com/macros/s/AKfycbw2-NimzMeWp2C2MgtczTFDP_2I8QiYTz8DTgS3ywjQx3I9QuPAcR-hV3Tjb5NLqBoRkA/exec";
     
-    // URL untuk Mengirim Data (Pendaftaran) - Spreadsheet 2 (BARU DIUPDATE)
+    // URL untuk Mengirim Data (Pendaftaran) - Spreadsheet 2
     const GAS_URL_POST = "https://script.google.com/macros/s/AKfycbw0W_OH5a8C8n9WxjR83--Poqp4rN0QBcEAGYzUR4R0su8-kYOhuT0JEb180s4d2qU4GQ/exec";
 
     // Variables / State
@@ -504,7 +505,27 @@
         if(dataPembina.length > 0) pembinaData = dataPembina;
 
       } catch (error) {
-        console.error("Gagal mengambil data API", error);
+        console.error("Gagal mengambil data API Error:", error);
+        
+        // Fallback data agar web tetap bisa dirender tanpa error blank
+        siswaData = [
+          { kelas: '7 AE 1', nama: 'Ahmad Budi (Data Dummy)' },
+          { kelas: '7 AE 1', nama: 'Siti Aminah (Data Dummy)' },
+          { kelas: '7 AE 2', nama: 'Bagus Sajiwo (Data Dummy)' }
+        ];
+        
+        ekskulData = [
+          { nama_ekskul: 'Tahfiz Al Qur\'an', biaya_daftar: 0, biaya_bulanan: 0, deskripsi: 'Kegiatan menghafal dan memperdalam bacaan Al-Qur\'an.', pembina: 'Ustadz Ahmad' },
+          { nama_ekskul: 'Basket', biaya_daftar: 50000, biaya_bulanan: 25000, deskripsi: 'Latihan fisik dan teknik dasar hingga lanjutan dalam olahraga bola basket.', pembina: 'Bapak Budi, S.Or' },
+          { nama_ekskul: 'Robotic', biaya_daftar: 100000, biaya_bulanan: 75000, deskripsi: 'Belajar merakit dan memprogram robot.', pembina: 'Bapak Dedi, S.T' },
+          { nama_ekskul: 'English Club', biaya_daftar: 0, biaya_bulanan: 0, deskripsi: 'Klub bahasa Inggris untuk meningkatkan kemampuan speaking dan listening.', pembina: 'Miss Sarah, S.Pd' }
+        ];
+
+        pembinaData = [
+          { nama: 'Ustadz Ahmad', ekskul: 'Tahfiz Al Qur\'an', kontak: '081234567890' },
+          { nama: 'Bapak Budi, S.Or', ekskul: 'Basket & Futsal', kontak: '081298765432' },
+          { nama: 'Bapak Dedi, S.T', ekskul: 'Robotic', kontak: '085612345678' }
+        ];
       } finally {
         populateKelas();
         populateEkskul();
