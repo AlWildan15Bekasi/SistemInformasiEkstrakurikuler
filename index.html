@@ -121,7 +121,6 @@
   <div id="view-home" class="flex-grow">
     <!-- Hero Section -->
     <section class="relative bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 text-white pt-24 pb-32 overflow-hidden">
-      <!-- Ornamen Kontur Lancip & Garis (Background) -->
       <div class="absolute inset-0 z-0">
         <div class="absolute top-0 right-0 w-1/2 h-full bg-blue-700 opacity-40 transform skew-x-[-20deg] translate-x-20"></div>
         <div class="absolute -top-10 left-10 w-40 h-40 border-2 border-amber-400 opacity-20 transform rotate-45"></div>
@@ -192,7 +191,7 @@
     <section id="pembina" class="py-16 bg-slate-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-          <h2 class="text-3xl font-bold text-blue-900 mb-2">Kontak Pembina</h2>
+          <h2 class="text-3xl font-bold text-blue-900 mb-2">Profil Pembina</h2>
           <div class="w-24 h-1 bg-amber-400 mx-auto rounded"></div>
         </div>
         
@@ -341,8 +340,8 @@
     // URL untuk Mengambil Data (Siswa, Ekskul & Pembina) - Spreadsheet 1
     const GAS_URL_GET = "https://script.google.com/macros/s/AKfycbw2-NimzMeWp2C2MgtczTFDP_2I8QiYTz8DTgS3ywjQx3I9QuPAcR-hV3Tjb5NLqBoRkA/exec";
     
-    // URL untuk Mengirim Data (Pendaftaran) - Spreadsheet 2
-    const GAS_URL_POST = "https://script.google.com/macros/s/AKfycbyJb0NKDECWU8RVAmqCedvMUXmhgSsLXeLJG_pZQyi7OR8ihlJoGweQO6sLT5EbYySR/exec";
+    // URL untuk Mengirim Data (Pendaftaran) - Spreadsheet 2 (BARU DIUPDATE)
+    const GAS_URL_POST = "https://script.google.com/macros/s/AKfycbw0W_OH5a8C8n9WxjR83--Poqp4rN0QBcEAGYzUR4R0su8-kYOhuT0JEb180s4d2qU4GQ/exec";
 
     // Variables / State
     let siswaData = [];
@@ -599,7 +598,7 @@
       lucide.createIcons();
     }
 
-    // Render Kartu Kontak Pembina dari Database
+    // Render Kartu Profil Pembina dari Database
     function renderPembinaCards() {
       pembinaGrid.innerHTML = '';
       if(pembinaData.length === 0) {
