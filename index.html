@@ -10,6 +10,17 @@
   
   <!-- Lucide Icons CDN untuk UI Dasar -->
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* CSS tambahan untuk menyembunyikan scrollbar pada Carousel */
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
 </head>
 <body class="bg-slate-50 font-sans text-slate-800 flex flex-col min-h-screen relative">
 
@@ -22,7 +33,7 @@
         <div class="flex items-center cursor-pointer" onclick="navigateTo('home')">
           <div class="flex-shrink-0 flex items-center gap-3">
             <img 
-              src="https://thumbs2.imgbox.com/09/93/eLDrLgwH_t.png" 
+              src="https://images2.imgbox.com/09/93/eLDrLgwH_o.png" 
               alt="Logo Sekolah" 
               class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-white object-cover bg-white shadow-md"
             />
@@ -89,9 +100,26 @@
         </button>
       </div>
       <!-- Modal Body -->
-      <div class="p-6">
+      <div class="p-6 overflow-y-auto max-h-[70vh]">
         <h4 id="modal-title" class="text-2xl font-extrabold text-blue-950 mb-4 border-b pb-2">Nama Ekskul</h4>
         
+        <!-- Info Jadwal -->
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div class="bg-blue-50 border border-blue-100 p-3 rounded-lg flex flex-col justify-center">
+            <h5 class="text-xs font-bold text-blue-700 uppercase mb-1">Hari Pelaksanaan</h5>
+            <p id="modal-hari" class="font-semibold text-blue-950 flex items-center gap-2">
+              <i data-lucide="calendar-days" class="w-4 h-4 text-blue-600"></i> <span>-</span>
+            </p>
+          </div>
+          <div class="bg-amber-50 border border-amber-100 p-3 rounded-lg flex flex-col justify-center">
+            <h5 class="text-xs font-bold text-amber-700 uppercase mb-1">Waktu Pelaksanaan</h5>
+            <p id="modal-jam" class="font-semibold text-blue-950 flex items-center gap-2">
+              <i data-lucide="clock" class="w-4 h-4 text-amber-600"></i> <span>-</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Info Deskripsi -->
         <div class="mb-4">
           <h5 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-1">Deskripsi Kegiatan</h5>
           <p id="modal-desc" class="text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-100">
@@ -99,18 +127,20 @@
           </p>
         </div>
         
+        <!-- Info Pembina -->
         <div>
           <h5 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-1">Pembina</h5>
-          <div class="flex items-center gap-3 bg-amber-50 p-3 rounded-lg border border-amber-100">
-            <div class="w-10 h-10 bg-amber-200 rounded-full flex items-center justify-center text-amber-700">
+          <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-lg border border-slate-200">
+            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-700">
               <i data-lucide="user" class="w-5 h-5"></i>
             </div>
             <p id="modal-pembina" class="font-semibold text-blue-900 text-lg">Nama Pembina</p>
           </div>
         </div>
+
       </div>
       <!-- Modal Footer -->
-      <div class="bg-slate-50 px-6 py-4 flex justify-end border-t border-slate-100">
+      <div class="bg-slate-50 px-6 py-4 flex justify-end border-t border-slate-200">
         <button onclick="closeModal()" class="px-5 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold rounded-lg transition">Tutup</button>
         <button onclick="closeModalAndRegister()" class="ml-3 px-5 py-2 bg-amber-400 hover:bg-amber-500 text-blue-900 font-bold rounded-lg transition shadow-md">Daftar Sekarang</button>
       </div>
@@ -174,17 +204,37 @@
       </div>
     </section>
 
-    <!-- Dokumentasi Section -->
+    <!-- Dokumentasi Section (Carousel) -->
     <section id="dokumentasi" class="py-16 bg-slate-100">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
+        <div class="text-center mb-10">
           <h2 class="text-3xl font-bold text-blue-900 mb-2">Dokumentasi Kegiatan</h2>
           <div class="w-24 h-1 bg-amber-400 mx-auto rounded"></div>
         </div>
         
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="dokumentasi-grid">
-          <!-- Digenerate via JS biar rapi -->
+        <div class="relative max-w-5xl mx-auto">
+          <!-- Tombol Kiri -->
+          <button onclick="scrollCarousel(-1)" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-6 bg-white p-3 rounded-full shadow-lg z-10 text-blue-900 hover:bg-amber-400 transition-colors hidden md:flex items-center justify-center">
+            <i data-lucide="chevron-left" class="w-6 h-6"></i>
+          </button>
+
+          <!-- Area Carousel Slider -->
+          <div id="dokumentasi-carousel" class="flex overflow-x-auto snap-x snap-mandatory gap-4 md:gap-6 pb-6 hide-scrollbar scroll-smooth">
+            <!-- Loading -->
+            <div class="w-full flex-none flex justify-center py-12" id="dok-loading">
+              <i data-lucide="loader-2" class="w-10 h-10 text-blue-600 animate-spin"></i>
+            </div>
+            <!-- Gambar akan di-generate via JS ke sini -->
+          </div>
+
+          <!-- Tombol Kanan -->
+          <button onclick="scrollCarousel(1)" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-6 bg-white p-3 rounded-full shadow-lg z-10 text-blue-900 hover:bg-amber-400 transition-colors hidden md:flex items-center justify-center">
+            <i data-lucide="chevron-right" class="w-6 h-6"></i>
+          </button>
+          
+          <p class="text-center text-sm text-slate-500 mt-2 md:hidden">Geser ke samping untuk melihat lebih banyak</p>
         </div>
+
       </div>
     </section>
 
@@ -348,6 +398,7 @@
     let siswaData = [];
     let ekskulData = [];
     let pembinaData = [];
+    let allImages = []; // Untuk menyimpan seluruh dokumentasi URL
     let isDataLoaded = false;
     let selectedFile = null;
     let isPaymentRequiredForSelected = false;
@@ -380,25 +431,12 @@
     const ekskulLoading = document.getElementById('ekskul-loading');
     const pembinaGrid = document.getElementById('pembina-grid');
     const pembinaLoading = document.getElementById('pembina-loading');
+    const carouselContainer = document.getElementById('dokumentasi-carousel');
 
     // Modal Elements
     const modalOverlay = document.getElementById('ekskul-modal');
     const modalContent = document.getElementById('ekskul-modal-content');
 
-    // Generate Dummy Images untuk Dokumentasi
-    const dokGrid = document.getElementById('dokumentasi-grid');
-    for(let i=0; i<8; i++) {
-      dokGrid.innerHTML += `
-        <div class="aspect-square bg-gray-200 rounded-lg overflow-hidden group relative">
-          <div class="w-full h-full flex items-center justify-center bg-gray-300">
-            <i data-lucide="image" class="w-10 h-10 text-gray-400"></i>
-          </div>
-          <div class="absolute inset-0 bg-blue-900 bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-center justify-center">
-            <span class="text-white opacity-0 group-hover:opacity-100 font-semibold">Lihat Foto</span>
-          </div>
-        </div>
-      `;
-    }
     lucide.createIcons();
 
     // Toggle Mobile Menu
@@ -419,14 +457,24 @@
       window.scrollTo(0, 0);
     }
 
-    // Modal Functions
-    function showDetailModal(nama, deskripsi, pembina) {
-      document.getElementById('modal-title').innerText = nama;
-      document.getElementById('modal-desc').innerText = deskripsi;
-      document.getElementById('modal-pembina').innerText = pembina;
+    // Modal Functions: Cari data lengkap Ekskul by Nama untuk di-passing ke Modal
+    function showDetailModal(nama_ekskul) {
+      const details = ekskulData.find(e => e.nama_ekskul === nama_ekskul);
+      if(!details) return;
+
+      document.getElementById('modal-title').innerText = details.nama_ekskul;
+      document.getElementById('modal-desc').innerText = details.deskripsi || "Belum ada deskripsi";
+      document.getElementById('modal-pembina').innerText = details.pembina || "-";
       
+      // Update Hari dan Jam
+      document.getElementById('modal-hari').innerHTML = `<i data-lucide="calendar-days" class="w-4 h-4 text-blue-600"></i> <span>${details.hari || "-"}</span>`;
+      document.getElementById('modal-jam').innerHTML = `<i data-lucide="clock" class="w-4 h-4 text-amber-600"></i> <span>${details.jam || "-"}</span>`;
+      
+      // Refresh icon yang baru di-inject
+      lucide.createIcons();
+
       // Preset nilai dropdown registrasi jika nanti user klik "Daftar Sekarang"
-      ekskulSelect.value = nama;
+      ekskulSelect.value = details.nama_ekskul;
       // Trigger event change agar logika biaya berjalan
       ekskulSelect.dispatchEvent(new Event('change'));
       
@@ -449,6 +497,12 @@
     function closeModalAndRegister() {
       closeModal();
       navigateTo('register');
+    }
+
+    // Fungsi Scroll Carousel Dokumentasi
+    function scrollCarousel(direction) {
+      const scrollAmount = window.innerWidth < 768 ? 280 : 350; // Jarak geser beda untuk mobile vs desktop
+      carouselContainer.scrollBy({ left: scrollAmount * direction, behavior: 'smooth' });
     }
 
     // Tampilkan Pesan Status
@@ -492,7 +546,7 @@
         const resSiswa = await fetch(GAS_URL_GET + "?action=getSiswa");
         const dataSiswa = await resSiswa.json();
         
-        // Ambil Data Ekskul (Sekarang ada Deskripsi & Pembina)
+        // Ambil Data Ekskul (Sekarang ada Hari, Jam, & array Dokumentasi)
         const resEkskul = await fetch(GAS_URL_GET + "?action=getEkskul");
         const dataEkskul = await resEkskul.json();
 
@@ -507,7 +561,7 @@
       } catch (error) {
         console.error("Gagal mengambil data API Error:", error);
         
-        // Fallback data agar web tetap bisa dirender tanpa error blank
+        // Fallback data (dilengkapi data hari dan jam)
         siswaData = [
           { kelas: '7 AE 1', nama: 'Ahmad Budi (Data Dummy)' },
           { kelas: '7 AE 1', nama: 'Siti Aminah (Data Dummy)' },
@@ -515,10 +569,9 @@
         ];
         
         ekskulData = [
-          { nama_ekskul: 'Tahfiz Al Qur\'an', biaya_daftar: 0, biaya_bulanan: 0, deskripsi: 'Kegiatan menghafal dan memperdalam bacaan Al-Qur\'an.', pembina: 'Ustadz Ahmad' },
-          { nama_ekskul: 'Basket', biaya_daftar: 50000, biaya_bulanan: 25000, deskripsi: 'Latihan fisik dan teknik dasar hingga lanjutan dalam olahraga bola basket.', pembina: 'Bapak Budi, S.Or' },
-          { nama_ekskul: 'Robotic', biaya_daftar: 100000, biaya_bulanan: 75000, deskripsi: 'Belajar merakit dan memprogram robot.', pembina: 'Bapak Dedi, S.T' },
-          { nama_ekskul: 'English Club', biaya_daftar: 0, biaya_bulanan: 0, deskripsi: 'Klub bahasa Inggris untuk meningkatkan kemampuan speaking dan listening.', pembina: 'Miss Sarah, S.Pd' }
+          { nama_ekskul: 'Tahfiz Al Qur\'an', biaya_daftar: 0, biaya_bulanan: 0, deskripsi: 'Kegiatan menghafal dan memperdalam bacaan Al-Qur\'an.', pembina: 'Ustadz Ahmad', hari: 'Senin', jam: '16.00 - 17.30', dokumentasi: [] },
+          { nama_ekskul: 'Basket', biaya_daftar: 50000, biaya_bulanan: 25000, deskripsi: 'Latihan fisik dan teknik dasar hingga lanjutan dalam olahraga bola basket.', pembina: 'Bapak Budi, S.Or', hari: 'Selasa', jam: '15.30 - 17.00', dokumentasi: [] },
+          { nama_ekskul: 'Robotic', biaya_daftar: 100000, biaya_bulanan: 75000, deskripsi: 'Belajar merakit dan memprogram robot.', pembina: 'Bapak Dedi, S.T', hari: 'Kamis', jam: '15.30 - 17.00', dokumentasi: [] }
         ];
 
         pembinaData = [
@@ -531,6 +584,7 @@
         populateEkskul();
         renderEkskulCards();
         renderPembinaCards();
+        renderDokumentasiCarousel();
         isDataLoaded = true;
         
         // Hide loading states
@@ -588,7 +642,7 @@
       
       ekskulData.forEach(eks => {
         const emojiIcon = getEkskulIcon(eks.nama_ekskul);
-        // Sanitasi teks agar aman dimasukkan ke dalam atribut onclick
+        // Sanitasi teks nama ekskul agar aman di-passing via parameter onclick
         const safeNama = eks.nama_ekskul.replace(/'/g, "\\'");
         const safeDesc = eks.deskripsi ? eks.deskripsi.replace(/'/g, "\\'") : "Belum ada deskripsi";
         const safePembina = eks.pembina ? eks.pembina.replace(/'/g, "\\'") : "-";
@@ -605,7 +659,8 @@
               <p class="text-gray-600 text-sm mb-4 line-clamp-2">${eks.deskripsi || "Kegiatan pengembangan diri untuk siswa."}</p>
               
               <div class="mt-auto flex flex-col gap-2">
-                <button onclick="showDetailModal('${safeNama}', '${safeDesc}', '${safePembina}')" class="w-full text-blue-700 bg-blue-50 hover:bg-blue-100 py-2 rounded-lg font-semibold text-sm transition flex justify-center items-center gap-1">
+                <!-- Memanggil modal berdasarkan Nama Ekskul -->
+                <button onclick="showDetailModal('${safeNama}')" class="w-full text-blue-700 bg-blue-50 hover:bg-blue-100 py-2 rounded-lg font-semibold text-sm transition flex justify-center items-center gap-1">
                   <i data-lucide="info" class="w-4 h-4"></i> Cek Kegiatan
                 </button>
                 <button onclick="ekskulSelect.value='${safeNama}'; ekskulSelect.dispatchEvent(new Event('change')); navigateTo('register');" class="w-full text-amber-600 border border-amber-300 hover:bg-amber-50 py-2 rounded-lg font-semibold text-sm transition flex justify-center items-center gap-1">
@@ -616,6 +671,52 @@
           </div>
         `;
       });
+      lucide.createIcons();
+    }
+
+    // Render Gambar Carousel untuk Dokumentasi
+    function renderDokumentasiCarousel() {
+      // 1. Kumpulkan semua url gambar dokumentasi dari semua ekskul
+      allImages = [];
+      ekskulData.forEach(eks => {
+        if(eks.dokumentasi && eks.dokumentasi.length > 0) {
+          eks.dokumentasi.forEach(imgUrl => {
+            allImages.push({ url: imgUrl, ekskul: eks.nama_ekskul });
+          });
+        }
+      });
+
+      const loadingDok = document.getElementById('dok-loading');
+      if (loadingDok) loadingDok.remove();
+
+      carouselContainer.innerHTML = '';
+
+      // 2. Jika tidak ada gambar di database sama sekali, kita kasih placeholder estetik
+      if (allImages.length === 0) {
+        for(let i=1; i<=6; i++) {
+          carouselContainer.innerHTML += `
+            <div class="flex-none w-[280px] md:w-[320px] aspect-[4/3] bg-slate-200 rounded-xl overflow-hidden shadow-sm relative group snap-center">
+              <div class="w-full h-full flex flex-col items-center justify-center bg-slate-100 text-slate-400">
+                <i data-lucide="image" class="w-12 h-12 mb-2 opacity-50"></i>
+                <span class="text-sm font-medium">Belum ada foto</span>
+              </div>
+            </div>
+          `;
+        }
+      } else {
+        // 3. Render gambar asli dari database
+        allImages.forEach(img => {
+          carouselContainer.innerHTML += `
+            <div class="flex-none w-[280px] md:w-[320px] aspect-[4/3] bg-slate-200 rounded-xl overflow-hidden shadow-sm relative group snap-center">
+              <img src="${img.url}" alt="Dokumentasi ${img.ekskul}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" onerror="this.src='https://placehold.co/600x400/e2e8f0/64748b?text=Gambar+Rusak'"/>
+              <!-- Caption / Label Ekskul overlay saat di-hover -->
+              <div class="absolute inset-0 bg-gradient-to-t from-blue-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                <span class="text-white font-semibold text-sm p-4 w-full truncate">${img.ekskul}</span>
+              </div>
+            </div>
+          `;
+        });
+      }
       lucide.createIcons();
     }
 
