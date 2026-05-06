@@ -61,7 +61,7 @@
             Pendaftaran
           </button>
           <button 
-            onclick="window.open('https://alwildan15bekasi.github.io/DashboardLogIn/', '_blank')" 
+            onclick="window.open('https://alwildan15bekasi.github.io/Stagging-DashboardLogIn/', '_blank')" 
             class="border-2 border-amber-400 text-amber-400 px-3 xl:px-4 py-2 rounded-md font-semibold hover:bg-amber-400 hover:text-blue-900 transition flex items-center gap-2 shadow-md text-sm xl:text-base"
           >
             <i data-lucide="lock" class="w-4 h-4"></i> Login
@@ -847,11 +847,15 @@
         const fileName = selectedFile ? selectedFile.name : "";
         const mimeType = selectedFile ? selectedFile.type : "";
 
+        // Format Nomor WA secara otomatis (mengubah 0 jadi 62 dan menghapus spasi/-)
+        const rawNoWa = document.getElementById('no-wa').value;
+        const formattedNoWa = formatWhatsApp(rawNoWa);
+
         const payload = {
           action: "register",
           kelas: kelasSelect.value,
           nama_siswa: siswaSelect.value,
-          no_wa: document.getElementById('no-wa').value,
+          no_wa: formattedNoWa,
           password: document.getElementById('password').value,
           ekskul: ekskulSelect.value,
           fileBase64: fileBase64,
